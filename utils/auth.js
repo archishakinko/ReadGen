@@ -60,7 +60,6 @@ exports.tokenVerify = function(req, res, app, next){
              }
             else{
                 app.locals.user = decoded;
-                req.decoded = decoded;
                 next();
             }
             });

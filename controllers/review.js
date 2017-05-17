@@ -4,7 +4,7 @@ const out = require('../utils/out');
 module.exports = (reviewService)=>{
     const router = express.Router();
     
-        router.delete('/deletereview/:reviewid', (req, res) => {
+        router.delete('/deletereview', (req, res) => {
             reviewService.deleteReview(req, res).then((message) => {
                 out.send(req, res, message);
             });
@@ -16,7 +16,7 @@ module.exports = (reviewService)=>{
             });
         }); 
 
-        router.put('/changereview/:reviewid', (req, res) => {
+        router.put('/changereview', (req, res) => {
             reviewService.changeReview(req, res).then((message) => {
                 out.send(req, res, message);
             });

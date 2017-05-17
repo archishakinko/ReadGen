@@ -19,15 +19,14 @@ module.exports = (bookshelv) => {
                 where:{id: req.params.bookid},
                 include:[{
                     model: dbcontext.author,
-                    as: 'bookauthor'
+                    as: 'bookauthor',
+                    required: false
                 },{
-                    model: dbcontext.genre,
-                    as: 'bookgenre'
+                    model: dbcontext.rating,
+                    as: 'bookrating',
+                    required: false
                 }]
-            }).then((data)=>{
-                console.log(data);
-                resolve(data);
-            }).catch(reject);
+            }).then(resolve).catch(reject);
         });
     };
 

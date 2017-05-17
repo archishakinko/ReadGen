@@ -35,14 +35,14 @@ module.exports = (Sequelize, config) => {
     Book.belongsToMany(Profile, {as: 'bookshelv', through: Bookshelv, timestamps: true, foreignKey: 'bookId'});
     Profile.belongsToMany(Book, {as: 'bookshelv', through: Bookshelv, timestamps: true, foreignKey: 'profileId'});
 
-    Book.belongsToMany(Profile, {as: 'review', through: Review, timestamps: true, foreignKey: 'bookId'});
-    Profile.belongsToMany(Book, {as: 'review', through: Review, timestamps: true, foreignKey: 'profileId'});
+    Book.belongsToMany(Profile, {as: 'bookreview', through: Review, timestamps: true, foreignKey: 'bookId'});
+    Profile.belongsToMany(Book, {as: 'bookreview', through: Review, timestamps: true, foreignKey: 'profileId'});
 
-    Book.belongsToMany(Profile, {as: 'rating', through: Rating, timestamps: true, foreignKey: 'bookId'});
-    Profile.belongsToMany(Book, {as: 'rating', through: Rating, timestamps: true, foreignKey: 'profileId'});
+    Book.belongsToMany(Profile, {as: 'bookrating', through: Rating, timestamps: true, foreignKey: 'bookId'});
+    Profile.belongsToMany(Book, {as: 'bookrating', through: Rating, timestamps: true, foreignKey: 'profileId'});
 
-    Book.belongsToMany(Author, {as: 'quote', through: Quote, timestamps: true, foreignKey: 'bookId'});
-    Author.belongsToMany(Book, {as: 'quote', through: Quote, timestamps: true, foreignKey: 'authorId'});
+    Book.belongsToMany(Author, {as: 'bookquote', through: Quote, timestamps: true, foreignKey: 'bookId'});
+    Author.belongsToMany(Book, {as: 'bookquote', through: Quote, timestamps: true, foreignKey: 'authorId'});
 
      return {
         profile: Profile,

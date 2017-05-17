@@ -1,28 +1,52 @@
 const promise = require('bluebird');
 const needle = promise.promisifyAll(require('needle'));
+const config = require('../config');
+const Sequelize = require('sequelize');
+const dbcontext = require('../context/db')(Sequelize, config);
 
 
-module.exports = (quotes) => {
+module.exports = (quotedb) => {
     return {
-       setGenreToBook: setGenreToBook
+       addQuote: addQuote,
+       deleteQuote: deleteQuote,
+       changeQuote: changeQuote
     };
 
-    function setGenreToBook(book, reqGenre){
+    function addQuote(req, res){
         return new Promise((resolve, reject)=>{
-            genres.findOrCreate({
-                where:{
-                    genre: reqGenre
-                }
-            }).spread((newGenre, created) => {
-                book.addBookgenre(newGenre).then(resolve).catch(reject);
-                console.log('bookgenre added');
-            })
+           dbcontext.book.findOne({
+               where: {id: req.body.bookid}
+           }).then((newBook) => {
+                newBook.addBookquote(req.body.authorid, { quote : req.body.quote }).
+                then(resolve).catch(reject);
+           }).then(resolve).catch(reject);
+           console.log('quote added');
         });
     };
 
-    function getBooksByGenre(book, status){
-        return new Promise((resolve, reject) => {
-            
+    function deleteQuote(req, res){
+        return new Promise((resolve, reject)=>{
+           dbcontext.quote.destroy({
+               where: {
+                   bookId: req.body.bookid,
+                   authorId: req.body.authorid
+                }
+           }).then(resolve).catch(reject);
+           console.log('quote deleted');
         });
-    };           
+    };
+
+    function changeQuote(req, res){
+        return new Promise((resolve, reject)=>{
+           dbcontext.quote.update(
+               {quote: req.body.quote},
+               {where: {
+                   bookId: req.body.bookid,
+                   authorId: req.body.authorid
+                }
+            }).then(resolve).catch(reject);
+           console.log('quote changed');
+        });
+    };
+          
 };

@@ -29,7 +29,6 @@ module.exports = (book, author) => {
                 then((result) => {
                     console.log(result);
                 });
-
                resolve(result.body.GoodreadsResponse.search.results);
            });
         });
