@@ -10,22 +10,16 @@ module.exports = (genres) => {
        setGenreToBook: setGenreToBook
     };
 
-    function setGenreToBook(book, reqGenre){
+    function setGenreToBook(req, res){
         return new Promise((resolve, reject)=>{
             genres.findOrCreate({
                 where:{
-                    genre: reqGenre
+                    genre: req.body.genre
                 }
             }).spread((newGenre, created) => {
-                newGenre.addBookgenre(book.dataValues.id).then(resolve).catch(reject);
+                newGenre.addBookgenre(req.body.bookid).then(resolve).catch(reject);
                 console.log('bookgenre added');
             })
         });
-    };
-
-    function getBooksByGenre(book, status){
-        return new Promise((resolve, reject) => {
-            
-        });
-    };           
+    };        
 };

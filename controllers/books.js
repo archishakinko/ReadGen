@@ -28,7 +28,7 @@ module.exports = (bookService)=>{
             });
         });
 
-        router.get('/getbookbyrate/:rateid', (req, res) => {
+        router.get('/getbookbyrate/:rate', (req, res) => {
             bookService.getBooksByRate(req, res).then((message) => {
                 out.send(req, res, message);
             });

@@ -22,7 +22,7 @@ module.exports = (bookshelvService)=>{
             });
         });
 
-        router.post('/addbooksinbookshelv', (req, res) => {
+        router.post('/addbooksinbookshelv/:bookid', (req, res) => {
             bookshelvService.addBook(req, res).then((message) => {
                 out.send(req, res, message);
             });
@@ -34,7 +34,7 @@ module.exports = (bookshelvService)=>{
             });
         });
 
-        router.put('/changestatus', (req, res) => {
+        router.put('/changestatus/:status', (req, res) => {
             bookshelvService.changeStatus(req, res).then((message) => {
                 out.send(req, res, message);
             });

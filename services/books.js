@@ -20,7 +20,7 @@ module.exports = (book, author) => {
        getBooksByAuthor: getBooksByAuthor
     };
 
-    function qSearch(req, res){
+    function qSearch(req, res){ //ok
         return new Promise((resolve, reject)=>{
            needle.getAsync('https://www.goodreads.com/search/index.xml?q='+req.params.books+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
            then((result)=>{
@@ -34,7 +34,7 @@ module.exports = (book, author) => {
         });
     } 
 
-    function add(req, res, toAdd){
+    function add(req, res, toAdd){ //ok
         return new Promise((resolve, reject) => {
             book.findOrCreate({
                 where:{
@@ -56,13 +56,18 @@ module.exports = (book, author) => {
         });
     };
 
-    function deleteFromDb(req, res){
+    function deleteFromDb(req, res){ //ok
         return new Promise((resolve, reject) => {
-
+            dbcontext.book.destroy({
+               where: {
+                   id: req.params.bookid
+                }
+           }).then(resolve).catch(reject);
+           console.log('book deleted');
         });
-    }    
+    };    
 
-    function getBooksByGenre(req, res){
+    function getBooksByGenre(req, res){ //ok
         return new Promise((resolve, reject) => {
             dbcontext.genre.findOne({
                 where:{id: req.params.genreid},
@@ -71,19 +76,22 @@ module.exports = (book, author) => {
                     as: 'bookgenre'
                 }]
             }).then((data)=>{
-                console.log(data);
                 resolve(data);
             }).catch(reject);
         });
-    }
+    };
 
     function getBooksByRate(req, res){
         return new Promise((resolve, reject) => {
-
+            dbcontext.book.findAll({
+                where:{rate: req.params.rate}
+            }).then((data)=>{
+                resolve(data);
+            }).catch(reject);
         });
     }     
 
-    function getBooksByAuthor(req, res){
+    function getBooksByAuthor(req, res){ //ok
         return new Promise((resolve, reject) => {
             dbcontext.author.findOne({
                 where:{id: req.params.authorid},
@@ -92,7 +100,6 @@ module.exports = (book, author) => {
                     as: 'bookauthor'
                 }]
             }).then((data)=>{
-                console.log(data);
                 resolve(data);
             }).catch(reject);
         });

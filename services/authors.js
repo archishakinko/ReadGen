@@ -1,28 +1,22 @@
 const promise = require('bluebird');
 const needle = promise.promisifyAll(require('needle'));
-
+const config = require('../config');
+const Sequelize = require('sequelize');
+const dbcontext = require('../context/db')(Sequelize, config);
 
 module.exports = (authors) => {
     return {
-       setGenreToBook: setGenreToBook
+       deleteAuthor: deleteAuthor
     };
 
-    function setGenreToBook(book, reqGenre){
+    function deleteAuthor(req, res){
         return new Promise((resolve, reject)=>{
-            genres.findOrCreate({
-                where:{
-                    genre: reqGenre
+          dbcontext.author.destroy({
+               where: {
+                   id: req.params.authorid
                 }
-            }).spread((newGenre, created) => {
-                book.addBookgenre(newGenre).then(resolve).catch(reject);
-                console.log('bookgenre added');
-            })
+           }).then(resolve).catch(reject);
+           console.log('author deleted');
         });
     };
-
-    function getBooksByGenre(book, status){
-        return new Promise((resolve, reject) => {
-            
-        });
-    };           
 };
