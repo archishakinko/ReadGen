@@ -51,23 +51,31 @@ exports.register = function(req, res, next, dbcontext){
         });
 };
 
-exports.tokenVerify = function(req, res, app, next){
-        var token = req.headers['x-access-token'];
-        if (token) {
-            jwt.verify(token, 'superSecret', function(err, decoded){
-             if(err){
-                return out.send(req, res, {success:false, message:'Failed to authenticate token'});
-             }
-            else{
-                app.locals.user = decoded;
-                next();
+exports.saveUserLocal = (req,res,next) => {
+    var token = req.headers['x-access-token'];
+    if (token) {
+        jwt.verify(token, 'superSecret', function(err, decoded){
+            if(!err){
+                res.locals.user = decoded;
             }
-            });
-        }
-        else{
-            return res.status(403).send({
-                success: false,
-                message: 'No token provided'
-            });
-        }
-    };
+        });
+    }
+    next();
+}
+
+exports.tokenVerify = function(req, res, next){
+    if (!res.locals.user)
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided'
+        });
+    next();
+};
+
+exports.isAuth = (req,res,next)=>{
+    if (!res.locals.user)
+        return res.render("error", {
+            message: 'No token provided'
+        });
+    next();
+}

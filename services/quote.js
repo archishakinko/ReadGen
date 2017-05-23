@@ -12,31 +12,33 @@ module.exports = (quotedb) => {
        changeQuote: changeQuote
     };
 
-    function addQuote(req, res){
+    function addQuote(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.book.findOne({
                where: {id: req.body.bookid}
            }).then((newBook) => {
                 newBook.addBookquote(req.body.authorid, { quote : req.body.quote }).
-                then(resolve).catch(reject);
-           }).then(resolve).catch(reject);
-           console.log('quote added');
+                then((resBook) => {
+                resolve({success: true, quote: resBook});
+            }).catch(reject);
+           }).catch(reject);
         });
     };
 
-    function deleteQuote(req, res){
+    function deleteQuote(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.quote.destroy({
                where: {
                    bookId: req.body.bookid,
                    authorId: req.body.authorid
                 }
-           }).then(resolve).catch(reject);
-           console.log('quote deleted');
+           }).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
 
-    function changeQuote(req, res){
+    function changeQuote(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.quote.update(
                {quote: req.body.quote},
@@ -44,8 +46,9 @@ module.exports = (quotedb) => {
                    bookId: req.body.bookid,
                    authorId: req.body.authorid
                 }
-            }).then(resolve).catch(reject);
-           console.log('quote changed');
+            }).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
           

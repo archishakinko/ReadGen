@@ -17,9 +17,10 @@ module.exports = (genres) => {
                     genre: req.body.genre
                 }
             }).spread((newGenre, created) => {
-                newGenre.addBookgenre(req.body.bookid).then(resolve).catch(reject);
-                console.log('bookgenre added');
-            })
+                newGenre.addBookgenre(req.body.bookid).then((resBook) => {
+                    resolve({success: true, genre: resBook});
+                }).catch(reject);
+            }).catch(reject);
         });
     };        
 };

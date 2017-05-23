@@ -9,18 +9,34 @@ module.exports = (review) => {
     return {
        addReview: addReview,
        deleteReview: deleteReview,
-       changeReview: changeReview
+       changeReview: changeReview,
+       getReviews: getReviews
     };
 
-    function addReview(req, res){
+    function getReviews(req, res){ //ok
+        return new Promise((resolve, reject)=>{
+          dbcontext.book.findOne({
+              where: {id: req.params.bookid},
+              include:{
+                    model: dbcontext.profile,
+                    as: 'bookreview'
+                } 
+          }).then((resBooks) => {
+              resolve({success: true, review: resBooks});
+          }).catch(reject);
+        });
+    };
+
+    function addReview(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.book.findOne({
                where: {id: req.body.bookid}
            }).then((newBook) => {
-                newBook.addBookreview(req.app.locals.user.id, { text : req.body.review }).
-                then(resolve).catch(reject);
-           }).then(resolve).catch(reject);
-           console.log('review added');
+                newBook.addBookreview(res.locals.user.id, { text : req.body.review }).
+                then((resBook) => {
+                    resolve({success: true, review: resBook});
+             }).catch(reject);
+           }).catch(reject);
         });
     };
 
@@ -29,10 +45,11 @@ module.exports = (review) => {
            dbcontext.review.destroy({
                where: {
                    bookId: req.body.bookid,
-                   profileId: req.app.locals.user.id
+                   profileId: res.locals.user.id
                 }
-           }).then(resolve).catch(reject);
-           console.log('review deleted');
+           }).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
 
@@ -42,10 +59,11 @@ module.exports = (review) => {
                {text: req.body.review},
                {where: {
                    bookId: req.body.bookid,
-                   profileId: req.app.locals.user.id
+                   profileId: res.locals.user.id
                 }
-            }).then(resolve).catch(reject);
-           console.log('review changed');
+            }).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
           

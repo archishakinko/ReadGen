@@ -6,8 +6,7 @@ const bodyParser = require('body-parser');
 require('body-parser-xml')(bodyParser);
 const easyxml = require('easyxml');
 const session = require('express-session');  
-const RedisStore = require('connect-redis')(session);
-var GoogleBooks = require('google-books-search');
+
 const saltRounds = 10;
 const dbcontext = require('./context/db')(Sequelize, config);
 const out = require('./utils/out');
@@ -23,11 +22,13 @@ const reviewService = require('./services/review')(dbcontext.review);
 
 
 const apiController = require('./controllers/api')(bookService, bookshelvService, genreService, quoteService, ratingService, reviewService, authorService);
-
+const frontController = require('./controllers/front');
 
 var app = express();
 var router = express.Router();
 
+app.set('view engine', 'jade');
+app.use(express.static('public'));
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('cookie-parser')());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,10 +36,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.xml({xmlParseOptions:{explicitArray: false}}));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
-router.use(function(req, res, next){
-    out.typeOf(req, res, next);
-});
-
+router.use(out.typeOf);
 
 router.post('/sessions', function(req, res){
     auth.auth(req, res, dbcontext);
@@ -48,16 +46,19 @@ router.post('/users', function(req, res, next){
     auth.register(req, res, next, dbcontext);
 });
 
-router.use(function(req, res, next){
-    auth.tokenVerify(req, res, app, next);
+app.use(auth.saveUserLocal);
+app.use(router);
+app.use('/api', auth.tokenVerify, apiController);
+
+app.use((err,req,res,next)=>{
+
 });
 
-app.use(router);
-app.use('/api', apiController);
+app.use(frontController);
 
  dbcontext.sequelize
     .sync()
     .then(() => {
-        app.listen(5000, () => console.log('Running on http://localhost:5000'));
+        app.listen(80, () => console.log('Running on http://localhost:5000'));
     })
     .catch((err) => console.log(err));

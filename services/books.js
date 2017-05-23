@@ -10,7 +10,6 @@ const review = require('../services/review')(dbcontext.review);
 const bookauthor = dbcontext.bookauthor;
 
 module.exports = (book, author) => {
-    console.log(book);
     return {
        qSearch: qSearch,
        add: add,
@@ -50,7 +49,9 @@ module.exports = (book, author) => {
                         website:'https://www.google.by/search?q='+ toAdd.best_book.author.name
                     }
                 }).spread((newAuthor, created) => {
-                    newBook.addBookauthor(newAuthor).then(resolve).catch(reject);
+                    newBook.addBookauthor(newAuthor).then(() => {
+                        resolve({success: true, book: newBook, author: newAuthor});
+                    }).catch(reject);
                 });
             });
         });
@@ -62,8 +63,9 @@ module.exports = (book, author) => {
                where: {
                    id: req.params.bookid
                 }
-           }).then(resolve).catch(reject);
-           console.log('book deleted');
+           }).then((resData) => {
+                resolve({success: true, data: resData});
+           }).catch(reject);
         });
     };    
 
@@ -75,18 +77,18 @@ module.exports = (book, author) => {
                     model: dbcontext.book,
                     as: 'bookgenre'
                 }]
-            }).then((data)=>{
-                resolve(data);
+            }).then((books)=>{
+                resolve({success: true, book: books});
             }).catch(reject);
         });
     };
 
-    function getBooksByRate(req, res){
+    function getBooksByRate(req, res){ //ok
         return new Promise((resolve, reject) => {
             dbcontext.book.findAll({
                 where:{rate: req.params.rate}
-            }).then((data)=>{
-                resolve(data);
+            }).then((books)=>{
+                resolve({success: true, book: books});
             }).catch(reject);
         });
     }     
@@ -99,8 +101,8 @@ module.exports = (book, author) => {
                     model: dbcontext.book,
                     as: 'bookauthor'
                 }]
-            }).then((data)=>{
-                resolve(data);
+            }).then((books)=>{
+                 resolve({success: true, book: books});
             }).catch(reject);
         });
     }           

@@ -9,44 +9,61 @@ module.exports = (rating) => {
     return {
        rateBook: rateBook,
        deleteRate: deleteRate,
-       changeRate: changeRate
+       changeRate: changeRate,
+       getRating: getRating
     };
 
-    function rateBook(req, res){
+    function getRating(req, res){ //ok
+        return new Promise((resolve, reject)=>{
+          dbcontext.book.findOne({
+              where: {id: req.params.bookid},
+              include:{
+                    model: dbcontext.profile,
+                    as: 'bookrating'
+                } 
+          }).then((resBooks) => {
+              resolve({success: true, rate: resBooks});
+          }).catch(reject);
+        });
+    };
+
+    function rateBook(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.book.findOne({
                where: { id: req.body.bookid }
            }).then((newBook) => {
                if(newBook)
-                newBook.addBookrating(req.app.locals.user.id, { rate : req.body.rate }).
-                then(resolve).catch(reject);
-           }).
-           then(resolve).catch(reject);
-           console.log('rating add');
+                newBook.addBookrating(res.locals.user.id, { rate : req.body.rate }).
+                then((resBook) => {
+                    resolve({success: true, rate: resBook});
+            }).catch(reject);
+           }).catch(reject);
         });
     };
 
-    function deleteRate(req, res){
+    function deleteRate(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.rating.destroy({
                where: { 
                    bookId: req.body.bookid,
-                   profileId: req.app.locals.user.id
+                   profileId: res.locals.user.id
                  }
-           }).then(resolve).catch(reject);
-           console.log('rating deleted');
+           }).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
 
-    function changeRate(req, res){
+    function changeRate(req, res){ //ok
         return new Promise((resolve, reject)=>{
            dbcontext.rating.update(
                {rate: req.params.rate},
                {where: { 
                     bookId: req.body.bookid,
-                    profileId: req.app.locals.user.id
-                }}).then(resolve).catch(reject);
-            console.log('rating changed');
+                    profileId: res.locals.user.id
+                }}).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
           

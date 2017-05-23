@@ -15,7 +15,9 @@ module.exports = (authors) => {
                where: {
                    id: req.params.authorid
                 }
-           }).then(resolve).catch(reject);
+           }).then((resData) => {
+                resolve({success: true, data: resData});
+           }).catch(reject);
            console.log('author deleted');
         });
     };

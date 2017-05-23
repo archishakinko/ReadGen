@@ -24,7 +24,9 @@ module.exports = (bookshelv) => {
                     nested: true,
                     required: false
                 }]
-            }).then(resolve).catch(reject);
+            }).then((resBook) => {
+                resolve({success: true, book: resBook});
+            }).catch(reject);
         });
     };
 
@@ -33,9 +35,10 @@ module.exports = (bookshelv) => {
             dbcontext.book.findOne({
                 where:{id: req.params.bookid}
             }).then((newBook) => {
-                newBook.addBookshelv(req.app.locals.user.id, { status: req.body.status }).
-                then(resolve).catch(reject);
-                console.log('bookshelv add');
+                newBook.addBookshelv(res.locals.user.id, { status: req.body.status }).
+                then((resBook) => {
+                    resolve({success: true, book: newBook, bookshelv: resBook});
+                }).catch(reject);
             });   
         });
     };
@@ -45,10 +48,11 @@ module.exports = (bookshelv) => {
             dbcontext.bookshelv.destroy({
                 where:{
                     bookId:req.params.bookid,
-                    profileId:req.app.locals.user.id
+                    profileId:res.locals.user.id
                 }
-            }).then(resolve).catch(reject);
-            console.log('bookshelv delete');
+            }).then((resBook) => {
+                resolve({success: true, data: resBook});
+            }).catch(reject);
         });
     };
  
@@ -57,9 +61,10 @@ module.exports = (bookshelv) => {
             dbcontext.bookshelv.update(
                 {status: req.params.status},
                 {where: {bookId: req.body.bookid,
-                         profileId: req.app.locals.user.id}}
-            ).then(resolve).catch(reject);
-            console.log('bookshelv set status');
+                         profileId: res.locals.user.id}}
+            ).then((resBook) => {
+                resolve({success: true, data: resBook, newStatus: req.params.status});
+            }).catch(reject);
         });
     };
 
@@ -69,12 +74,13 @@ module.exports = (bookshelv) => {
             if(req.query.limit)
                 localLimit = parseInt(req.query.limit);
             dbcontext.bookshelv.findAll({
-                where:{profileId: req.app.locals.user.id},
+                where:{profileId: res.locals.user.id},
                 limit: localLimit,
                 raw: true
             })
-            .then(resolve).catch(reject);
-            console.log('bookshelv get all books');
+            .then((resBook) => {
+                resolve({success: true, book: resBook});
+            }).catch(reject);
         });
     };
 
@@ -84,13 +90,14 @@ module.exports = (bookshelv) => {
             if(req.query.limit)
                 localLimit = parseInt(req.query.limit);
             dbcontext.bookshelv.findAll({
-                where:{ profileId: req.app.locals.user.id,
+                where:{ profileId: res.locals.user.id,
                         status: req.params.status},
                 limit: localLimit,
                 raw: true
             })
-            .then(resolve).catch(reject);
-            console.log('bookshelv get books by status');
+            .then((resBook) => {
+                resolve({success: true, book: resBook});
+            }).catch(reject);
         });
     };              
 };
