@@ -23,37 +23,35 @@ module.exports = (book, author) => {
         return new Promise((resolve, reject)=>{
            needle.getAsync('https://www.goodreads.com/search/index.xml?q='+req.params.books+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
            then((result)=>{
-
-               add(req, res, result.body.GoodreadsResponse.search.results.work[0]).
-                then((result) => {
-                    console.log(result);
-                });
                resolve(result.body.GoodreadsResponse.search.results);
            });
         });
     } 
 
-    function add(req, res, toAdd){ //ok
+    function add(req, res){ //ok
         return new Promise((resolve, reject) => {
-            book.findOrCreate({
-                where:{
-                    title:toAdd.best_book.title,
-                    rate:parseInt(toAdd.average_rating),
-                    pages:parseInt(toAdd.average_rating)*100,
-                    annotation:'book'
-                }
-            }).spread((newBook, created) => {
-                author.findOrCreate({
-                    where: {
-                        name:toAdd.best_book.author.name,
-                        website:'https://www.google.by/search?q='+ toAdd.best_book.author.name
+            needle.getAsync('https://www.goodreads.com/book/title.xml?author='+req.params.author+'&title='+req.params.title+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
+            then((founded) => {
+                book.findOrCreate({
+                    where:{
+                        title: founded.body.GoodreadsResponse.book.title,
+                        rate:parseInt(founded.body.GoodreadsResponse.book.average_rating),
+                        pages:parseInt(founded.body.GoodreadsResponse.book.average_rating)*100,
+                        annotation: founded.body.GoodreadsResponse.book.description.substring(0,100) + '...'
                     }
-                }).spread((newAuthor, created) => {
-                    newBook.addBookauthor(newAuthor).then(() => {
-                        resolve({success: true, book: newBook, author: newAuthor});
-                    }).catch(reject);
+                }).spread((newBook, created) => {
+                    author.findOrCreate({
+                        where: {
+                            name:founded.body.GoodreadsResponse.book.authors.author.name,
+                            website:'https://www.google.by/search?q='+ founded.body.GoodreadsResponse.book.authors.author.name
+                            }
+                    }).spread((newAuthor, created) => {
+                        newBook.addBookauthor(newAuthor).then(() => {
+                            resolve({success: true, book: newBook, author: newAuthor});
+                        }).catch(reject);
+                    });
                 });
-            });
+            })
         });
     };
 

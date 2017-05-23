@@ -5,7 +5,8 @@ var serializer = new easyxml({
     dateFormat: 'ISO',
     manifest: true
 });
-exports.send = function(req, res, data){
+exports.send = function(req, res, data, status = 400){
+    res.status(status);
     switch(req.get('Content-type')){
         default:
             res.setHeader('Content-type', 'application/json');

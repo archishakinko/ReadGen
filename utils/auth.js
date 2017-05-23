@@ -7,20 +7,20 @@ exports.auth = function(req, res, dbcontext){
  dbcontext.profile.findOne({
             where:{login: req.body.login}
             }).then(function(user){
-                if(!user){
-                   out.send(req, res, { success: false, message: 'Authentication failed. User not found.' });
+                if(!user) {
+                   out.send(req, res, { success: false, message: 'Authentication failed. User not found.' }, 422);
                 } else if (user) {
                     bcrypt.compare(req.body.password, user.password, function(err, result){
                         if(result){
                             var token = jwt.sign(user.get({plain: true}), 'superSecret', { expiresIn: 7200 });
+                            res.cookie('token', token);
                             out.send(req, res, {
-                            success: true,
-                            message: 'Enjoy your token!',
-                            token: token
-                            });
-                        }
-                        else{
-                            out.send(req, res, { success: false, message: 'Authentication failed. Wrong password.' });
+                                success: true,
+                                message: 'Enjoy your token!',
+                                token: token
+                            }, 200);
+                        } else {
+                            out.send(req, res, { success: false, message: 'Authentication failed. Wrong password.' }, 422);
                         }
                     });
                 }
@@ -52,15 +52,16 @@ exports.register = function(req, res, next, dbcontext){
 };
 
 exports.saveUserLocal = (req,res,next) => {
-    var token = req.headers['x-access-token'];
+    var token = req.headers['x-access-token'] || req.cookies.token;
     if (token) {
         jwt.verify(token, 'superSecret', function(err, decoded){
             if(!err){
                 res.locals.user = decoded;
+                console.log(res.locals.user);
             }
+            next();
         });
     }
-    next();
 }
 
 exports.tokenVerify = function(req, res, next){

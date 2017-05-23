@@ -46,13 +46,10 @@ router.post('/users', function(req, res, next){
     auth.register(req, res, next, dbcontext);
 });
 
-app.use(auth.saveUserLocal);
+//app.use(auth.saveUserLocal);
 app.use(router);
+app.use(auth.saveUserLocal);
 app.use('/api', auth.tokenVerify, apiController);
-
-app.use((err,req,res,next)=>{
-
-});
 
 app.use(frontController);
 

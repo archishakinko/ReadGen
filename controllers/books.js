@@ -6,13 +6,13 @@ module.exports = (bookService)=>{
     
         router.get('/books/:books', (req, res) => {
             bookService.qSearch(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         });
    
-        router.post('/books/:book', (req, res) => {
+        router.get('/books/:author/:title', (req, res) => {
             bookService.add(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
 
