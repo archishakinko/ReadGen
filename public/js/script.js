@@ -1,0 +1,70 @@
+function callAjax(id, data, form = null) {
+    var $ajax;
+    switch (ajaxHandlers[id].type) {
+        case "get":
+            $ajax = $.get;
+        break;
+        case "post":
+            $ajax = $.post;
+        break;
+    }
+    if (form) {
+        $(form).serializeArray().forEach(function(item){
+            data[item.name] = item.value;
+        });
+    }
+    var url = ajaxHandlers[id].url;
+    for (var key in data) {
+        url = url.replace(':'+key+':', data[key]);
+    }
+    if (ajaxHandlers[id].precall)
+        ajaxHandlers[id].precall();
+    console.log("Ajax request: "+url);
+    $ajax(url, data).done(ajaxHandlers[id].callback);
+}
+
+$(document).on('submit', 'form', function (e) {
+    e.preventDefault();
+    var id = $(this).attr("id");
+    callAjax(id, {}, this);
+});
+
+function showError(error) {
+    $("#notes").append('<div class="error">'+error.message+'</div>');
+    setTimeout(function() {
+        $("#notes>*").first().fadeOut("fast", function() {
+            $("#notes>*").first().remove();
+        });
+    }, 5000);
+}
+
+$(document).ajaxError(function(e,jq,s,er) {
+    showError(JSON.parse(jq.responseText));
+});
+
+$(document).on('click', '[rel=book]', function(e) {
+    e.preventDefault();
+    if ($(this).data("id"))
+        callAjax("get_book_id", {
+            id: $(this).data("id")
+        });
+    else
+        callAjax("get_book", {
+            title: $(this).data('title'),
+            author: $(this).data('author')
+        });
+})
+
+$(document).on('click', function() {
+    $(".popup").hide();
+});
+
+$(document).on('click', '[rel=tab]', function(e) {
+    e.preventDefault();
+    var name = $(this).data("name");
+    var container = $(this).parents(".tab-container").first();
+    container.find(".tab-content").hide();
+    container.find(".tab-content[data-name="+name+"]").show();
+    container.find(".tab.active").removeClass("active");
+    $(this).addClass("active");
+});

@@ -1,21 +1,16 @@
-$(document).on('submit', 'form', function (e) {
-    e.preventDefault();
-    var data = $(this).serialize();
-    $.post('/sessions', data).done(function (data) {
-        window.location.reload();
-        //console.log(data);
-    })
-});
-
-function showError(error) {
-    $("#notes").append('<div class="error">'+error.message+'</div>');
-    setTimeout(function() {
-        $("#notes>*").first().fadeOut("fast", function() {
-            $("#notes>*").first().remove();
-        });
-    }, 5000);
-}
-
-$(document).ajaxError(function(e,jq,s,er) {
-    showError(JSON.parse(jq.responseText));
-});
+var ajaxHandlers = {
+    auth: {
+        type: "post",
+        url: "/sessions",
+        callback: function(data) {
+            window.location.reload();
+        }
+    },
+    reg: {
+        type: "post",
+        url: "/users",
+        callback: function(data){
+            window.location.reload();
+        }
+    }
+};

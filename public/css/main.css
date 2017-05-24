@@ -1,10 +1,14 @@
 html, body {height:100%;padding:0;margin:0}
-body {background:#555;font-family:Calibri}
+body {background:#555;font-family:Calibri; color:#ddd; font-weight:200}
 
 #bg {position:fixed; width:100%; height:100%; opacity:0.2; background-image:url(/img/bg1.jpg); background-size:cover;background-position:center center;filter: blur(5px);}
-input, button {font-family:Calibri; padding:10px 25px; box-sizing:border-box; margin:10px 5px; font-size:18px; border:1px solid #ddd;}
+input, button {outline:none !important;background:rgba(255,255,255,0.6);font-family:Calibri; padding:10px 25px; box-sizing:border-box; margin:10px 5px; font-size:18px; border:1px solid #ddd;}
+input:hover {background:rgba(255,255,255,0.7)}
+input:focus {background:rgba(255,255,255,0.8);}
 input[type=submit], button {background:transparent; color:#ddd;border:1px solid #ddd; cursor:pointer}
 input[type=submit]:hover, button:hover {background:#ddd; color:#333; }
+
+h1,h2,h3,h4 {font-weight:200}
 
 .hidden {display:none}
 
@@ -14,12 +18,29 @@ input[type=submit]:hover, button:hover {background:#ddd; color:#333; }
 #content {width:80%;margin:0 auto;max-width:1200px;position:relative}
 #header {height:80px;padding-top:40px}
 #logo {display:block;width:240px;height:80px;background:rgba(0,0,0,0.3);float:left;font-size:34px; font-weight:200; font-family: 'Agency FB'; line-height:80px; text-align:center; color:#fff; text-decoration: none;}
-#search {float:right;margin-top:8px;position:relative}
+#logo:hover {background:rgba(0,0,0,0.4)}
+#search {float:right;margin-top:8px;position:relative; color:#000}
 #search input {width:500px}
 #search #results {position:absolute;left:0;top:60px;width:100%;box-sizing:border-box;background:rgba(0,0,0,0.5);max-height:400px; overflow:auto}
-#search .result {padding:10px 25px; height:75px;}
+#search .result {padding:10px 25px; height:75px;cursor:default}
 #search .result:hover {background:rgba(0,0,0,0.5)}
 #search .result img {float:left}
-#search .result span {display:block;line-height:37.5px; color:#fff;padding-left:67px;}
-#search .result .author {color:#ddd}
-#search .result .title {font-size:20px}
+#search .result span {display:block;line-height:20px; color:#fff;padding-left:67px;}
+#search .result .author {color:#ddd;margin-top:15px}
+#search .result .title {font-size:20px;text-overflow: ellipsis; white-space: nowrap; padding-left:17px; overflow:hidden}
+#search .search-field {position:relative; display:inline-block}
+#search .fa-spin {position:absolute; right:20px; top:24px}
+
+.content {margin-top:60px; display:none}
+#spinner {font-size:100px; text-align:center; position:fixed; top:50%; margin-top:-0.5em; width:100%;left:0}
+#main .category {margin-bottom:40px}
+.category .list {height:140px; background:rgba(0,0,0,0.3)}
+
+.popup {z-index:2}
+
+#book #title {height:147px;}
+#book img {float:left;}
+#book #title>div {padding-left:120px; line-height:35px;}
+#book .author {color:#ddd;padding-top:21px; font-size:20px}
+#book .title {font-size:26px;}
+#book .rating {font-size:20px; color:#ccc}

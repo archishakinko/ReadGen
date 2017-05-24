@@ -8,6 +8,7 @@ module.exports = (Sequelize, sequelize) => {
         title: Sequelize.STRING,
         rate: Sequelize.INTEGER,
         pages: Sequelize.INTEGER,
-        annotation: Sequelize.STRING
+        annotation: Sequelize.TEXT,
+        img: Sequelize.STRING
     });    
 };

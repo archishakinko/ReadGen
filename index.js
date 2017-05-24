@@ -36,18 +36,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.xml({xmlParseOptions:{explicitArray: false}}));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
-router.use(out.typeOf);
+app.use(out.typeOf);
 
-router.post('/sessions', function(req, res){
+app.post('/sessions', function(req, res){
     auth.auth(req, res, dbcontext);
 });
 
-router.post('/users', function(req, res, next){
+app.post('/users', function(req, res, next){
     auth.register(req, res, next, dbcontext);
 });
 
 //app.use(auth.saveUserLocal);
-app.use(router);
 app.use(auth.saveUserLocal);
 app.use('/api', auth.tokenVerify, apiController);
 

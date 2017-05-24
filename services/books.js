@@ -11,17 +11,33 @@ const bookauthor = dbcontext.bookauthor;
 
 module.exports = (book, author) => {
     return {
-       qSearch: qSearch,
-       add: add,
-       deleteFromDb: deleteFromDb,
-       getBooksByGenre: getBooksByGenre,
-       getBooksByRate: getBooksByRate,
-       getBooksByAuthor: getBooksByAuthor
+        getBook: getBook,
+        qSearch: qSearch,
+        add: add,
+        deleteFromDb: deleteFromDb,
+        getBooksByGenre: getBooksByGenre,
+        getBooksByRate: getBooksByRate,
+        getBooksByAuthor: getBooksByAuthor
+    };
+
+    function getBook(req, res){ //ok
+        return new Promise((resolve, reject)=>{
+           dbcontext.book.findOne({
+                where:{id: req.params.id},
+                include:[{
+                    all: true,
+                    nested: true,
+                    required: false
+                }]
+            }).then((resBook) => {
+                resolve({success: true, book: resBook});
+            }).catch(reject);
+        });
     };
 
     function qSearch(req, res){ //ok
         return new Promise((resolve, reject)=>{
-           needle.getAsync('https://www.goodreads.com/search/index.xml?q='+req.params.books+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
+           needle.getAsync('https://www.goodreads.com/search/index.xml?q='+req.query.q+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
            then((result)=>{
                resolve(result.body.GoodreadsResponse.search.results);
            });
@@ -30,28 +46,51 @@ module.exports = (book, author) => {
 
     function add(req, res){ //ok
         return new Promise((resolve, reject) => {
-            needle.getAsync('https://www.goodreads.com/book/title.xml?author='+req.params.author+'&title='+req.params.title+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
-            then((founded) => {
-                book.findOrCreate({
-                    where:{
-                        title: founded.body.GoodreadsResponse.book.title,
-                        rate:parseInt(founded.body.GoodreadsResponse.book.average_rating),
-                        pages:parseInt(founded.body.GoodreadsResponse.book.average_rating)*100,
-                        annotation: founded.body.GoodreadsResponse.book.description.substring(0,100) + '...'
-                    }
-                }).spread((newBook, created) => {
-                    author.findOrCreate({
-                        where: {
-                            name:founded.body.GoodreadsResponse.book.authors.author.name,
-                            website:'https://www.google.by/search?q='+ founded.body.GoodreadsResponse.book.authors.author.name
+            dbcontext.book.findOne({
+                where: {title: req.params.title},
+                include:[{
+                        all: true,
+                        nested: true,
+                        required: false
+                    }]
+            }).then((dbbook) => {
+                if(!dbbook){
+                    needle.getAsync('https://www.goodreads.com/book/title.xml?author='+req.params.author+'&title='+req.params.title+'&key=cBs3uZsK8KJ520XZ7ZJgQ').
+                    then((founded) => {
+                        book.findOrCreate({
+                            where:{
+                                title: founded.body.GoodreadsResponse.book.title,
+                                rate:parseInt(founded.body.GoodreadsResponse.book.average_rating),
+                                pages:parseInt(founded.body.GoodreadsResponse.book.average_rating)*100,
+                                annotation: founded.body.GoodreadsResponse.book.description,
+                                img: founded.body.GoodreadsResponse.book.image_url
                             }
-                    }).spread((newAuthor, created) => {
-                        newBook.addBookauthor(newAuthor).then(() => {
-                            resolve({success: true, book: newBook, author: newAuthor});
-                        }).catch(reject);
-                    });
-                });
-            })
+                        }).spread((newBook, created) => {
+                            author.findOrCreate({
+                                where: {
+                                    name:founded.body.GoodreadsResponse.book.authors.author.name,
+                                    website:'https://www.google.by/search?q='+ founded.body.GoodreadsResponse.book.authors.author.name
+                                }
+                            }).spread((newAuthor, created) => {
+                                newBook.addBookauthor(newAuthor).then(() => {
+                                    dbcontext.book.findOne({
+                                        where:{id: newBook.id},
+                                        include:[{
+                                            all: true,
+                                            nested: true,
+                                            required: false
+                                        }]
+                                    }).then((resBook) => {
+                                        resolve({success: true, book: resBook});
+                                    }).catch(reject);
+                                }).catch(reject);
+                            });
+                        });
+                    })
+                } else{
+                   resolve({success: true, book: dbbook});
+                }
+            }) 
         });
     };
 

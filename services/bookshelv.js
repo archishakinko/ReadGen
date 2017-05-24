@@ -73,13 +73,22 @@ module.exports = (bookshelv) => {
         return new Promise((resolve, reject) => {
             if(req.query.limit)
                 localLimit = parseInt(req.query.limit);
-            dbcontext.bookshelv.findAll({
-                where:{profileId: res.locals.user.id},
+            dbcontext.book.findAll({
+                raw: true,
                 limit: localLimit,
-                raw: true
+                include:[{
+                    model: dbcontext.profile,
+                    as:"bookshelv",
+                    where:{id: res.locals.user.id},
+                    attributes: []
+                },{
+                    model: dbcontext.author,
+                    as: "bookauthor",
+                    attributes: ['id','name']
+                }]
             })
             .then((resBook) => {
-                resolve({success: true, book: resBook});
+                resolve({success: true, books: resBook});
             }).catch(reject);
         });
     };

@@ -1,9 +1,10 @@
 var ajaxHandlers = {
     search_form: {
         type: "get",
-        url: "/api/books/:q:",
+        url: "/api/books",
         precall: function() {
             $("#search #results").html("");
+            $("#search .fa-spin").show();
         },
         callback: function(data) {
             data.work.forEach(function(book){
@@ -13,61 +14,61 @@ var ajaxHandlers = {
                     '<span class="title">'+book.best_book.title+'</span>'+
                 '</div>');
             });
+            $("#search .fa-spin").hide();
             $("#search #results").show();
         }
     },
     get_book: {
         type: "get",
         url: "/api/books/:author:/:title:",
+        precall: function() {
+            $("#content>.content").hide();
+            $("#spinner").show();
+        },
         callback: function(data){
-            
+            console.log(data);
+            $("#book img").attr("src", data.book.img);
+            $("#book .author").html(typeof data.book.bookauthor != 'Object'?data.book.bookauthor[0].name:data.book.bookauthor.name);
+            $("#book .title").html(data.book.title);
+            $("#book .rate").html(data.book.rate);
+            $("#book .annotation").html(data.book.annotation);
+            $("#book").show();
+            $("#spinner").hide();
+        }
+    },
+    get_my_books: {
+        type: "get",
+        url: "/api/bookshelvs",
+        precall: function() {
+            $("#content>.content").hide();
+            $("#spinner").show();
+        },
+        callback: function(data) {
+            var status = {
+                "1":"notreading",
+                "2":"reading",
+                "3":"wanted",
+                "4":"stoped"
+            };
+            $("#reading .list, #wanted .list, #stoped .list, #recomend .list").html("");
+            data.books.forEach(function(book){
+                $('<div class="book" rel="book" data-id="'+book.id+'">');
+            })
+            $("#main").show();
+            $("#spinner").hide();
         }
     }
 };
 
-function callAjax(id, data) {
-    var $ajax;
-    switch (ajaxHandlers[id].type) {
-        case "get":
-            $ajax = $.get;
-        break;
-        case "post":
-            $ajax = $.post;
-        break;
-    }
-    var url = ajaxHandlers[id].url;
-    $(this).serializeArray().forEach(function(item) {
-        url = url.replace(':'+item.name+':', item.value);
-    });
-    if (ajaxHandlers[id].precall)
-        ajaxHandlers[id].precall();
-    $ajax(url, data).done(ajaxHandlers[id].callback);
-}
+ajaxHandlers.get_book_id = {};
+Object.assign(ajaxHandlers.get_book_id, ajaxHandlers.get_book);
+ajaxHandlers.get_book_id.url = "/api/books/:id:";
 
-$(document).on('submit', 'form', function (e) {
-    e.preventDefault();
-    var data = $(this).serialize();
-    var id = $(this).attr("id");
-    callAjax(id, data);
+$(document).ready(function() {
+    callAjax("get_my_books", {});
 });
 
-function showError(error) {
-    $("#notes").append('<div class="error">'+error.message+'</div>');
-    setTimeout(function() {
-        $("#notes>*").first().fadeOut("fast", function() {
-            $("#notes>*").first().remove();
-        });
-    }, 5000);
-}
-
-$(document).ajaxError(function(e,jq,s,er) {
-    showError(JSON.parse(jq.responseText));
-});
-
-$(document).on('click', '[rel=book]', function(e) {
+$(document).on("click", "#logo", function(e) {
     e.preventDefault();
-    callAjax("get_book", {
-        title: $(this).data('title'),
-        author: $(this).data('author')
-    });
-})
+    callAjax("get_my_books", {});
+});

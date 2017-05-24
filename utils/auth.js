@@ -44,7 +44,9 @@ exports.register = function(req, res, next, dbcontext){
                              login:req.body.login,
                              password: hash
                          }).then(function(user){
-                           out.send(req, res, {success: true, message: 'User created', login: req.body.login});
+                            var token = jwt.sign(user.get({plain: true}), 'superSecret', { expiresIn: 7200 });
+                            res.cookie('token', token);
+                            out.send(req, res, {success: true, message: 'User created', login: req.body.login}, 200);
                          })
                      }
                 });
@@ -61,7 +63,8 @@ exports.saveUserLocal = (req,res,next) => {
             }
             next();
         });
-    }
+    } else
+        next();
 }
 
 exports.tokenVerify = function(req, res, next){

@@ -4,8 +4,14 @@ const out = require('../utils/out');
 module.exports = (bookService)=>{
     const router = express.Router();
     
-        router.get('/books/:books', (req, res) => {
+        router.get('/books', (req, res) => {
             bookService.qSearch(req, res).then((message) => {
+                out.send(req, res, message, 200);
+            });
+        });
+
+        router.get('/books/:id', (req, res) => {
+            bookService.getBook(req, res).then((message) => {
                 out.send(req, res, message, 200);
             });
         });

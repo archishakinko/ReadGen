@@ -6,7 +6,7 @@ module.exports = (bookshelvService)=>{
     
         router.get('/bookshelvs', (req, res) => {
             bookshelvService.getAllBooks(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         });
         
