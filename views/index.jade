@@ -33,9 +33,14 @@ html
                         |Want to read
                         span.count
                     .list
-                #recomend.category
+                #stopped.category
                     h3
-                        |Recomendations
+                        |Stopped
+                        span.count
+                    .list
+                #notreading.category
+                    h3
+                        |Will not read
                         span.count
                     .list
             #book.content
@@ -46,6 +51,16 @@ html
                     .rating
                         .fa.fa-star
                         span.rate 0
-                h3 Annotation
+                h2 Status
+                #status
+                    button.status(data-id="1",rel="status") Will not read
+                    button.status(data-id="2",rel="status") Reading 
+                    button.status(data-id="3",rel="status") Want to read
+                    button.status(data-id="4",rel="status") Stopped
+                h2 Annotation
                 .annotation #Annotation
+                h2 Genres
+                .genre #Genre
+                h2 Reviews
+                .review
         #notes

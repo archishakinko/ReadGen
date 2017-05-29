@@ -26,12 +26,25 @@ var ajaxHandlers = {
             $("#spinner").show();
         },
         callback: function(data){
-            console.log(data);
+            var authors = "";
+            data.book.bookauthor.forEach(function(author) {
+                authors += ((authors!="")?", ":"")+author.name;
+            })
+            var genres = "";
+            data.book.bookgenre.forEach(function(genre) {
+                genres += ((genres!="")?", ":"")+genre.genre;
+            })
+            var reviews = {};
             $("#book img").attr("src", data.book.img);
-            $("#book .author").html(typeof data.book.bookauthor != 'Object'?data.book.bookauthor[0].name:data.book.bookauthor.name);
+            $("#book .author").html(authors);
             $("#book .title").html(data.book.title);
             $("#book .rate").html(data.book.rate);
             $("#book .annotation").html(data.book.annotation);
+            $("#book .genre").html(genres);
+            $("#book .review").html(genres);
+            $("#book .status").attr("data-bookid", data.book.id).removeClass("active");
+            if (data.book.bookshelv.length>0)
+                $("#book .status[data-id='"+data.book.bookshelv[0].bookshelv.status+"']").addClass("active");
             $("#book").show();
             $("#spinner").hide();
         }
@@ -48,14 +61,51 @@ var ajaxHandlers = {
                 "1":"notreading",
                 "2":"reading",
                 "3":"wanted",
-                "4":"stoped"
+                "4":"stopped"
             };
-            $("#reading .list, #wanted .list, #stoped .list, #recomend .list").html("");
+            var cnt = {};
+            for (var key in status) {
+                $("#"+status[key]+" .list").html("");
+                cnt[status[key]] = 0;
+            }
             data.books.forEach(function(book){
-                $('<div class="book" rel="book" data-id="'+book.id+'">');
+                console.log(book);
+                var authors = "";
+                book.bookauthor.forEach(function(author) {
+                    authors += ((authors!="")?", ":"")+author.name;
+                })
+                $('<div class="book" rel="book" data-id="'+book.id+'">'+
+                    '<img src="'+book.img+'">'+
+                    '<div class="author">'+authors+'</div>'+
+                    '<div class="title">'+book.title+'</div>'+
+                '</div>').appendTo("#"+status[book.bookshelv[0].bookshelv.status]+" .list");
+                cnt[status[book.bookshelv[0].bookshelv.status]]++;
             })
+            for (var key in status) {
+                $("#"+status[key]+" .count").html(cnt[status[key]]);
+            }
             $("#main").show();
             $("#spinner").hide();
+        }
+    },
+    status: {
+        type: "post",
+        url: "/api/bookshelvs/:bookid:",
+        callback: function(data) {
+            console.log(data);
+            $("#book .status.active").removeClass("active");
+            $("#book .status[data-id='"+data.status+"']").addClass("active");
+        }
+    },
+    genre: {
+        type: "get",
+        url: "/api/booksgenre/:genreid:",
+        callback: function(data) {
+            var genres = "";
+            data.book.bookauthor.forEach(function(author) {
+                authors += ((authors!="")?", ":"")+author.name;
+            })
+            console.log(data);
         }
     }
 };

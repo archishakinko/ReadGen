@@ -37,7 +37,7 @@ module.exports = (bookshelv) => {
             }).then((newBook) => {
                 newBook.addBookshelv(res.locals.user.id, { status: req.body.status }).
                 then((resBook) => {
-                    resolve({success: true, book: newBook, bookshelv: resBook});
+                    resolve({success: true, book: newBook, status: req.body.status});
                 }).catch(reject);
             });   
         });
@@ -74,17 +74,15 @@ module.exports = (bookshelv) => {
             if(req.query.limit)
                 localLimit = parseInt(req.query.limit);
             dbcontext.book.findAll({
-                raw: true,
+                //raw: true,
                 limit: localLimit,
                 include:[{
                     model: dbcontext.profile,
                     as:"bookshelv",
-                    where:{id: res.locals.user.id},
-                    attributes: []
+                    where:{id: res.locals.user.id}
                 },{
                     model: dbcontext.author,
-                    as: "bookauthor",
-                    attributes: ['id','name']
+                    as: "bookauthor"
                 }]
             })
             .then((resBook) => {

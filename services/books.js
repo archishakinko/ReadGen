@@ -66,25 +66,49 @@ module.exports = (book, author) => {
                                 img: founded.body.GoodreadsResponse.book.image_url
                             }
                         }).spread((newBook, created) => {
-                            author.findOrCreate({
-                                where: {
-                                    name:founded.body.GoodreadsResponse.book.authors.author.name,
-                                    website:'https://www.google.by/search?q='+ founded.body.GoodreadsResponse.book.authors.author.name
-                                }
-                            }).spread((newAuthor, created) => {
-                                newBook.addBookauthor(newAuthor).then(() => {
-                                    dbcontext.book.findOne({
-                                        where:{id: newBook.id},
-                                        include:[{
-                                            all: true,
-                                            nested: true,
-                                            required: false
-                                        }]
-                                    }).then((resBook) => {
-                                        resolve({success: true, book: resBook});
-                                    }).catch(reject);
-                                }).catch(reject);
-                            });
+                            if(founded.body.GoodreadsResponse.book.authors.author.length > 1){
+                                founded.body.GoodreadsResponse.book.authors.author.forEach((val)=>{
+                                     author.findOrCreate({
+                                        where: {
+                                            name:val.name,
+                                            website:'https://www.google.by/search?q='+ val.name
+                                        }
+                                    }).spread((newAuthor, created) => {
+                                        newBook.addBookauthor(newAuthor).then(() => {
+                                            dbcontext.book.findOne({
+                                                where:{id: newBook.id},
+                                                include:[{
+                                                    all: true,
+                                                    nested: true,
+                                                    required: false
+                                                }]
+                                            }).then((resBook) => {
+                                                resolve({success: true, book: resBook});
+                                            }).catch(reject);
+                                        }).catch(reject);
+                                    });
+                                })     
+                            }else{
+                                  author.findOrCreate({
+                                        where: {
+                                            name:founded.body.GoodreadsResponse.book.authors.author.name,
+                                            website:'https://www.google.by/search?q='+ founded.body.GoodreadsResponse.book.authors.author.name
+                                        }
+                                    }).spread((newAuthor, created) => {
+                                        newBook.addBookauthor(newAuthor).then(() => {
+                                            dbcontext.book.findOne({
+                                                where:{id: newBook.id},
+                                                include:[{
+                                                    all: true,
+                                                    nested: true,
+                                                    required: false
+                                                }]
+                                            }).then((resBook) => {
+                                                resolve({success: true, book: resBook});
+                                            }).catch(reject);
+                                        }).catch(reject);
+                                    });
+                            }
                         });
                     })
                 } else{

@@ -2,7 +2,6 @@
   "name": "readgen",
   "version": "0.0.1",
   "dependencies": {
-    "bcrypt": "^0.8.7",
     "bcryptjs": "^2.3.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",

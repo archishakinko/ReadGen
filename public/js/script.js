@@ -14,6 +14,8 @@ function callAjax(id, data, form = null) {
         });
     }
     var url = ajaxHandlers[id].url;
+    console.log(url);
+    console.log(data);
     for (var key in data) {
         url = url.replace(':'+key+':', data[key]);
     }
@@ -68,3 +70,11 @@ $(document).on('click', '[rel=tab]', function(e) {
     container.find(".tab.active").removeClass("active");
     $(this).addClass("active");
 });
+
+$(document).on('click', '[rel=status]', function(e){
+    e.preventDefault();
+    callAjax('status', {
+        status: $(this).data("id"),
+        bookid: $(this).attr("data-bookid")
+    });
+})

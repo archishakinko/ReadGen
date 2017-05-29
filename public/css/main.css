@@ -6,7 +6,7 @@ input, button {outline:none !important;background:rgba(255,255,255,0.6);font-fam
 input:hover {background:rgba(255,255,255,0.7)}
 input:focus {background:rgba(255,255,255,0.8);}
 input[type=submit], button {background:transparent; color:#ddd;border:1px solid #ddd; cursor:pointer}
-input[type=submit]:hover, button:hover {background:#ddd; color:#333; }
+input[type=submit]:hover, button:hover, button.active {background:#ddd; color:#333; }
 
 h1,h2,h3,h4 {font-weight:200}
 
@@ -34,13 +34,22 @@ h1,h2,h3,h4 {font-weight:200}
 .content {margin-top:60px; display:none}
 #spinner {font-size:100px; text-align:center; position:fixed; top:50%; margin-top:-0.5em; width:100%;left:0}
 #main .category {margin-bottom:40px}
-.category .list {height:140px; background:rgba(0,0,0,0.3)}
+.category .list {min-height:200px; background:rgba(0,0,0,0.3);overflow:auto; max-height:400px}
+.category .count {display:inline-block;color:#ccc;margin-left:10px; font-size:12px;vertical-align:middle}
+.category .book {cursor:default;display:inline-block; vertical-align:top;width:200px; height:200px; text-align:center; padding:25px; box-sizing:border-box}
+.category .book:hover {background:rgba(0,0,0,0.2)}
+.category .book img {width:70px;}
+.category .book .author {font-size:14px; color:#ddd; text-overflow:ellipsis; overflow:hidden; white-space: nowrap}
+.category .book .title {font-size:18px; text-overflow:ellipsis; overflow:hidden; white-space: nowrap}
+
 
 .popup {z-index:2}
 
 #book #title {height:147px;}
 #book img {float:left;}
 #book #title>div {padding-left:120px; line-height:35px;}
-#book .author {color:#ddd;padding-top:21px; font-size:20px}
-#book .title {font-size:26px;}
-#book .rating {font-size:20px; color:#ccc}
+#book .author {color:#ddd;padding-top:21px; font-size:24px}
+#book .title {font-size:32px;}
+#book .rating {font-size:26px; color:#ccc}
+#book #status {text-align:center}
+#book .status {margin:0 20px}

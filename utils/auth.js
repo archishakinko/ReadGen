@@ -59,7 +59,6 @@ exports.saveUserLocal = (req,res,next) => {
         jwt.verify(token, 'superSecret', function(err, decoded){
             if(!err){
                 res.locals.user = decoded;
-                console.log(res.locals.user);
             }
             next();
         });
