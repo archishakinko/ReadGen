@@ -6,25 +6,25 @@ module.exports = (reviewService)=>{
     
         router.get('/reviews/:bookid', (req, res) => {
             reviewService.getReviews(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
         
         router.delete('/reviews', (req, res) => {
             reviewService.deleteReview(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
 
         router.post('/reviews', (req, res) => {
             reviewService.addReview(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
 
         router.put('/reviews', (req, res) => {
             reviewService.changeReview(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
               

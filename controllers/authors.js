@@ -6,7 +6,7 @@ module.exports = (authorService)=>{
     
         router.delete('/authors/:authorid', (req, res) => {
             authorService.deleteAuthor(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
               

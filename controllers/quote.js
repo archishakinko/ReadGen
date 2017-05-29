@@ -6,19 +6,19 @@ module.exports = (quoteService)=>{
     
         router.delete('/quotes', (req, res) => {
             quoteService.deleteQuote(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
 
         router.post('/quotes', (req, res) => {
             quoteService.addQuote(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
 
         router.put('/quotes', (req, res) => {
             quoteService.changeQuote(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
               

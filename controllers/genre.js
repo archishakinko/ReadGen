@@ -6,7 +6,7 @@ module.exports = (genreService)=>{
     
         router.post('/genres', (req, res) => {
             genreService.setGenreToBook(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         }); 
               

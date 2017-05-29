@@ -1,3 +1,6 @@
+var delete_cookie = function(name) {
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
 function callAjax(id, data, form = null) {
     var $ajax;
     switch (ajaxHandlers[id].type) {

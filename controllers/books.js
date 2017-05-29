@@ -24,25 +24,25 @@ module.exports = (bookService)=>{
 
         router.delete('/books/:bookid', (req, res) => {
             bookService.deleteFromDb(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         });
 
         router.get('/booksgenre/:genreid', (req, res) => {
             bookService.getBooksByGenre(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         });
 
         router.get('/booksrate/:rate', (req, res) => {
             bookService.getBooksByRate(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         });
 
         router.get('/booksauthor/:authorid', (req, res) => {
             bookService.getBooksByAuthor(req, res).then((message) => {
-                out.send(req, res, message);
+                out.send(req, res, message, 200);
             });
         });                
     return router;

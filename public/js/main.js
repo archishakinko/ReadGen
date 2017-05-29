@@ -41,8 +41,17 @@ var ajaxHandlers = {
             $("#book .rate").html(data.book.rate);
             $("#book .annotation").html(data.book.annotation);
             $("#book .genre").html(genres);
-            $("#book .review").html(genres);
+            $("#review .list").html("");
+            $("#book textarea").val("");
+            data.book.bookreview.forEach(function(review){
+                 $('<div class="review" rel="review" data-id="'+review.id+'">'+
+                    '<div class="text">&laquo'+review.review.text+'&raquo</div>'+
+                    '<div class="profile"> - '+review.login+'</div>'+
+                    '<div class="date">'+review.review.createdAt+'</div>'+
+                '</div>').appendTo("#review .list");
+            })
             $("#book .status").attr("data-bookid", data.book.id).removeClass("active");
+            $("#book input[name=bookid]").val(data.book.id);
             if (data.book.bookshelv.length>0)
                 $("#book .status[data-id='"+data.book.bookshelv[0].bookshelv.status+"']").addClass("active");
             $("#book").show();
@@ -97,15 +106,24 @@ var ajaxHandlers = {
             $("#book .status[data-id='"+data.status+"']").addClass("active");
         }
     },
-    genre: {
-        type: "get",
-        url: "/api/booksgenre/:genreid:",
+    add_review: {
+        type: "post",
+        url: "/api/reviews",
         callback: function(data) {
-            var genres = "";
-            data.book.bookauthor.forEach(function(author) {
-                authors += ((authors!="")?", ":"")+author.name;
-            })
             console.log(data);
+            callAjax("get_book_id", {
+                id: $("#book input[name=bookid]").val()
+            });
+        }
+    },
+    add_genre: {
+        type: "post",
+        url: "/api/genres",
+        callback: function(data) {
+            console.log(data);
+            callAjax("get_book_id", {
+                id: $("#book input[name=bookid]").val()
+            });
         }
     }
 };
@@ -121,4 +139,15 @@ $(document).ready(function() {
 $(document).on("click", "#logo", function(e) {
     e.preventDefault();
     callAjax("get_my_books", {});
+});
+
+$(document).on("click", "#logout", function(e) {
+    e.preventDefault();
+    delete_cookie("token");
+    window.location.reload();
+});
+
+$(document).on("click", ".add_genre", function(e) {
+    e.preventDefault();
+    $("#add_genre").toggle();
 });

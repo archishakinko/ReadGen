@@ -12,6 +12,7 @@ html
         #content
             #header
                 a#logo(href="/") ReadGen
+                #logout.fa.fa-sign-out(title="Log out")
                 #search
                     form#search_form(action="",method="POST")
                         .search-field
@@ -51,16 +52,29 @@ html
                     .rating
                         .fa.fa-star
                         span.rate 0
-                h2 Status
+                    #genre
+                        span.genre #Genre
+                        i.fa.fa-plus.add_genre
+                form#add_genre.hidden(action="",method="POST")
+                    h1 Add genre
+                    input(name="genre", placeholder="Enter genre")
+                    input(type="hidden",name="bookid")
+                    button Add genre
+                h1 Status
                 #status
                     button.status(data-id="1",rel="status") Will not read
                     button.status(data-id="2",rel="status") Reading 
                     button.status(data-id="3",rel="status") Want to read
                     button.status(data-id="4",rel="status") Stopped
-                h2 Annotation
+                h1 Annotation
                 .annotation #Annotation
-                h2 Genres
-                .genre #Genre
-                h2 Reviews
-                .review
+                h1 Reviews
+                #review
+                    .list
+                h1 Add review
+                form#add_review(action="",method="POST")
+                    textarea(name="review", placeholder="Enter review...")
+                    input(type="hidden",name="bookid")
+                    button Add review
+
         #notes
