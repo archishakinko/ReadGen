@@ -8,7 +8,7 @@ const easyxml = require('easyxml');
 const session = require('express-session');  
 
 const saltRounds = 10;
-const dbcontext = require('./context/db')(Sequelize, config);
+const dbcontext = require('./context/db')(Sequelize, (process.env.DEV!=null)?config.postgres:config.mysql);
 const out = require('./utils/out');
 const auth = require('./utils/auth');
 
@@ -25,6 +25,7 @@ const apiController = require('./controllers/api')(bookService, bookshelvService
 const frontController = require('./controllers/front');
 
 var app = express();
+app.set('port',(process.env.PORT || 80));
 var router = express.Router();
 
 app.set('view engine', 'jade');
@@ -55,6 +56,6 @@ app.use(frontController);
  dbcontext.sequelize
     .sync()
     .then(() => {
-        app.listen(80, () => console.log('Running on http://localhost:5000'));
+        app.listen(app.get('port'), () => console.log('Running on http://localhost'));
     })
     .catch((err) => console.log(err));

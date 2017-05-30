@@ -2,7 +2,7 @@ const promise = require('bluebird');
 const needle = promise.promisifyAll(require('needle'));
 const config = require('../config');
 const Sequelize = require('sequelize');
-const dbcontext = require('../context/db')(Sequelize, config);
+const dbcontext = require('../context/db')(Sequelize, (process.env.DEV!=null)?config.postgres:config.mysql);
 
 module.exports = (authors) => {
     return {

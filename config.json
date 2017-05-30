@@ -1,9 +1,18 @@
 {
-  "db": {
+  "mysql": {
     "dialect":"mysql",
     "host": "127.0.0.1",
     "name": "readgen",
     "user": "root",
     "password": "qwerty"
+  },
+  "postgres": {
+    "dialect":"postgres",
+    "host": "ec2-54-225-119-223.compute-1.amazonaws.com",
+    "name": "da76t7pj6567mn",
+    "user": "mwgilhdxntkpak",
+    "port": "5432",
+    "password": "b9353764db7a6276f70d5e68c8ec3f1bc26e997e96818e01f4aa98181b2203df",
+    "dialectOptions": { "ssl": true }
   }
 }

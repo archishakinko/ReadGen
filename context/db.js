@@ -1,7 +1,7 @@
 module.exports = (Sequelize, config) => {
     const options = {
-        host: config.db.host,
-        dialect: config.db.dialect,
+        host: config.host,
+        dialect: config.dialect,
         logging: false,
         define: {
             timestamps: true,
@@ -14,7 +14,7 @@ module.exports = (Sequelize, config) => {
         }
     };
 
-    const sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, options); 
+    const sequelize = new Sequelize(config.name, config.user, config.password, options); 
     const Profile = require('../models/profile')(Sequelize, sequelize);
     const Book = require('../models/books')(Sequelize, sequelize);
     const Genre = require('../models/genre')(Sequelize, sequelize);

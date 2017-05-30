@@ -1,0 +1,8 @@
+{
+	"name":"ReadGen",
+	"description": "test",
+	"repository":"https://github.com/archishakinko/readgen",
+	"logo": "https://small-sharp-tool.com/logo.svg",
+	"keywords": ["node", "express"],
+	"image":"heroku/nodejs"
+}

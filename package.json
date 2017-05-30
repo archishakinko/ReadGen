@@ -1,4 +1,5 @@
 {
+  
   "name": "readgen",
   "version": "0.0.1",
   "dependencies": {
@@ -21,5 +22,8 @@
     "passport-facebook": "^2.1.1",
     "passport-vkontakte": "^0.3.2",
     "sequelize": "^3.24.1"
+  },
+  "enjines": {
+    "node": "7.8.0"
   }
 }
