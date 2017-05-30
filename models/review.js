@@ -1,5 +1,5 @@
 module.exports = (Sequelize, sequelize) => {
     return sequelize.define('review', {
-        text: Sequelize.STRING
+        text: Sequelize.TEXT
     });    
 };
