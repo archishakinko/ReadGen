@@ -43,7 +43,7 @@ module.exports = (rating) => {
 
     function deleteRate(req, res){ //ok
         return new Promise((resolve, reject)=>{
-           dbcontext.rating.destroy({
+           rating.destroy({
                where: { 
                    bookId: req.body.bookid,
                    profileId: res.locals.user.id
@@ -56,7 +56,7 @@ module.exports = (rating) => {
 
     function changeRate(req, res){ //ok
         return new Promise((resolve, reject)=>{
-           dbcontext.rating.update(
+           rating.update(
                {rate: req.params.rate},
                {where: { 
                     bookId: req.body.bookid,

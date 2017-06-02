@@ -41,7 +41,7 @@ module.exports = (review) => {
 
     function deleteReview(req, res){
         return new Promise((resolve, reject)=>{
-           dbcontext.review.destroy({
+           review.destroy({
                where: {
                    bookId: req.body.bookid,
                    profileId: res.locals.user.id
@@ -54,7 +54,7 @@ module.exports = (review) => {
 
     function changeReview(req, res){
         return new Promise((resolve, reject)=>{
-           dbcontext.review.update(
+           review.update(
                {text: req.body.review},
                {where: {
                    bookId: req.body.bookid,

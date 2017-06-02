@@ -22,7 +22,7 @@ module.exports = (book, author) => {
 
     function getBook(req, res){ //ok
         return new Promise((resolve, reject)=>{
-           dbcontext.book.findOne({
+           book.findOne({
                 where:{id: req.params.id},
                 include:[{
                     all: true,
@@ -120,7 +120,7 @@ module.exports = (book, author) => {
 
     function deleteFromDb(req, res){ //ok
         return new Promise((resolve, reject) => {
-            dbcontext.book.destroy({
+            book.destroy({
                where: {
                    id: req.params.bookid
                 }
@@ -146,7 +146,7 @@ module.exports = (book, author) => {
 
     function getBooksByRate(req, res){ //ok
         return new Promise((resolve, reject) => {
-            dbcontext.book.findAll({
+            book.findAll({
                 where:{rate: req.params.rate}
             }).then((books)=>{
                 resolve({success: true, book: books});

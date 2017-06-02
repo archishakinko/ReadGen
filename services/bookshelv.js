@@ -45,7 +45,7 @@ module.exports = (bookshelv) => {
 
     function deleteBook(req, res){ //ok
         return new Promise((resolve, reject)=>{
-            dbcontext.bookshelv.destroy({
+            bookshelv.destroy({
                 where:{
                     bookId:req.params.bookid,
                     profileId:res.locals.user.id
@@ -58,7 +58,7 @@ module.exports = (bookshelv) => {
  
     function changeStatus(req,res){ //ok
         return new Promise((resolve, reject) => {
-            dbcontext.bookshelv.update(
+            bookshelv.update(
                 {status: req.params.status},
                 {where: {bookId: req.body.bookid,
                          profileId: res.locals.user.id}}

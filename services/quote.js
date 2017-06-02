@@ -27,7 +27,7 @@ module.exports = (quotedb) => {
 
     function deleteQuote(req, res){ //ok
         return new Promise((resolve, reject)=>{
-           dbcontext.quote.destroy({
+           quotedb.destroy({
                where: {
                    bookId: req.body.bookid,
                    authorId: req.body.authorid
@@ -40,7 +40,7 @@ module.exports = (quotedb) => {
 
     function changeQuote(req, res){ //ok
         return new Promise((resolve, reject)=>{
-           dbcontext.quote.update(
+           quotedb.update(
                {quote: req.body.quote},
                {where: {
                    bookId: req.body.bookid,

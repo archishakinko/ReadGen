@@ -11,7 +11,7 @@ module.exports = (authors) => {
 
     function deleteAuthor(req, res){
         return new Promise((resolve, reject)=>{
-          dbcontext.author.destroy({
+          authors.destroy({
                where: {
                    id: req.params.authorid
                 }
